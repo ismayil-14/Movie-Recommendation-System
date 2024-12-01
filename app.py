@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 import pickle
 import numpy as np
 import pandas as pd
-import xgboost as xgb
+
 # Initialize Flask app
 app = Flask(__name__)
 
@@ -16,8 +16,9 @@ def predict():
     input1 = data.get("input1")
     input2 = data.get("input2")
 
-    model = xgb.Booster()
-    model.load_model("xgb_model.json")
+    with open('xgb_model.pkl', 'rb') as file:
+        model = pickle.load(file)
+    
     with open("scaler.pkl", 'rb') as file:
         scaler = pickle.load(file)
     with open("merged_movie_data.pkl", 'rb') as file:
@@ -39,14 +40,14 @@ def predict():
         'average_movie_rating','average_user_rating','PCA_Binary_1',
        'PCA_Binary_2', 'PCA_Binary_3', 'PCA_Binary_4', 'PCA_Binary_5'])
     result = scaler.transform(df)
-    dmatrix_data = xgb.DMatrix(result)
-    prediction = model.predict(dmatrix_data)
-    
+    prediction = model.predict(result)
+
     # Make prediction
     try:
-        prediction = int(np.argmax(prediction) +1)
-        print(int(prediction))
-        return jsonify({"prediction": prediction})
+        prediction =  prediction[0]+1
+
+        
+        return jsonify({"prediction": int(prediction)})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
