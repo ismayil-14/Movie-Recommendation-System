@@ -16,4 +16,4 @@ EXPOSE 5000
 EXPOSE 8501
 
 # Run both Flask and Streamlit apps in parallel
-CMD ["sh", "-c", "flask run --host=0.0.0.0 --port=5000 & streamlit run s_app.py --server.port 8501"]
+CMD ["sh", "-c", "flask run --port=5000 & streamlit run s_app.py --server.port 8501"]
