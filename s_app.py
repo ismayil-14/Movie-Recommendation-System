@@ -9,12 +9,10 @@ st.write("Enter two inputs to get the prediction from the XGBoost model.")
 input1 = st.number_input("User ID:", value=0.0)
 input2 = st.number_input("Item ID:", value=0.0)
 
-# Button to trigger API call
 if st.button("Get Prediction"):
-    # API call
     try:
         response = requests.post(
-            "http://host.docker.internal:5000/predict",  # Flask API endpoint
+            "http://host.docker.internal:5000/predict", 
             json={"input1": input1, "input2": input2}
         )
         if response.status_code == 200:
